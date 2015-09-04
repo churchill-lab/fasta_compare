@@ -12,3 +12,10 @@ cd muscle3.8.31/src
 make
 cp muscle /some/directory/on/path
 
+To use:
+
+/path/to/compare_fasta.py <file1.fa> <file2.fa>
+
+Enjoy!
+
+

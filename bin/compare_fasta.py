@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+import argparse
 import os
 import subprocess
 import sys
@@ -45,14 +48,23 @@ def diff_files(file1, file2):
 
     mf.close()
 
-    print "# EQUAL: {0}".format(len(fa_equal))
-    print "# DIFF: {0}".format(len(fa_diff))
+    print "# EQUAL ENTRIES: {0}".format(len(fa_equal))
+    print "# DIFFERENT ENTRIES: {0}".format(len(fa_diff))
 
     if len(fa_diff) > 0:
         muscle_it(muscle_file)
         os.remove(muscle_file)
 
 if __name__ == '__main__':
-    diff_files(sys.argv[1], sys.argv[2])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("fasta1")
+    parser.add_argument("fasta2")
+    args = parser.parse_args()
+
+    try:
+        diff_files(args.fasta1, args.fasta2)
+    except Exception:
+        print "Error occurred, please make sure 'muscle' executable is on your path"
+
 
 
