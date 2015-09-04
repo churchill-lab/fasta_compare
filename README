@@ -1,0 +1,14 @@
+Simple script to compare fasta files
+
+Pre-requisites:
+muscle
+Python:
+    pysam
+
+To install muscle:
+
+tar xvfz muscle3.8.31_src.tar.gz
+cd muscle3.8.31/src
+make
+cp muscle /some/directory/on/path
+
