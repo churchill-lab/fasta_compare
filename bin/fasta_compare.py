@@ -25,20 +25,22 @@ def diff_files(file1, file2):
     fasta_1 = pysam.FastaFile(file1)
     fasta_2 = pysam.FastaFile(file2)
 
-    muscle_file = "muscle.fa"
-    mf = open(muscle_file, "w")
 
     fa_equal = {}
     fa_diff = {}
 
     for seq_id1 in fasta_1.references:
         if seq_id1 in fasta_2.references:
-            print "Comparing {}".format(seq_id1)
 
             if fasta_1.fetch(seq_id1) == fasta_2.fetch(seq_id1):
+                print "Comparing {} ... EQUAL".format(seq_id1)
                 fa_equal[seq_id1] = seq_id1
             else:
+                print "Comparing {} ... DIFFERENT".format(seq_id1)
                 fa_diff[seq_id1] = seq_id1
+
+                muscle_file = "muscle_{}.fa".format(seq_id1)
+                mf = open(muscle_file, "w")
 
                 write_header(seq_id1 + "_1", mf)
                 write_sequence(fasta_1.fetch(seq_id1), mf)
@@ -46,14 +48,17 @@ def diff_files(file1, file2):
                 write_header(seq_id1 + "_2", mf)
                 write_sequence(fasta_2.fetch(seq_id1), mf)
 
-    mf.close()
+                mf.close()
 
-    print "# EQUAL ENTRIES: {0}".format(len(fa_equal))
-    print "# DIFFERENT ENTRIES: {0}".format(len(fa_diff))
+                muscle_it(muscle_file)
+                os.remove(muscle_file)
 
-    if len(fa_diff) > 0:
-        muscle_it(muscle_file)
-        os.remove(muscle_file)
+    if len(fa_equal) == 0 and len(fa_diff) == 0:
+        print "No matching id's found in files."
+    else:
+        print "# EQUAL ENTRIES: {0}".format(len(fa_equal))
+        print "# DIFFERENT ENTRIES: {0}".format(len(fa_diff))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
